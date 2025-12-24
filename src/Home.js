@@ -11,18 +11,11 @@ import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-// ✅ Framer Motion
 import { motion, AnimatePresence } from "framer-motion";
 
-/** -----------------------------
- *  API Base URL (CRA .env)
- *  ----------------------------*/
 const API_BASE =
   (process.env.REACT_APP_API_BASE_URL || "").trim().replace(/\/$/, "");
 
-/** -----------------------------
- *  Framer Motion Variants
- *  ----------------------------*/
 const fadeUp = {
   hidden: { opacity: 0, y: 18 },
   show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
@@ -58,7 +51,34 @@ const modalCard = {
 export function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showLeadPopup, setShowLeadPopup] = useState(false);
+  const [touchStartX, setTouchStartX] = useState(null);
+  const [touchEndX, setTouchEndX] = useState(null);
 
+  const handleTouchStart = (e) => {
+  setTouchStartX(e.touches[0].clientX);
+};
+
+const handleTouchMove = (e) => {
+  setTouchEndX(e.touches[0].clientX);
+};
+
+const handleTouchEnd = () => {
+  if (!touchStartX || !touchEndX) return;
+  
+  const diff = touchStartX - touchEndX;
+  const minSwipeDistance = 50;
+  
+  if (Math.abs(diff) > minSwipeDistance) {
+    if (diff > 0) {
+      nextSlide(); // Swipe left -> next slide
+    } else {
+      prevSlide(); // Swipe right -> prev slide
+    }
+  }
+  
+  setTouchStartX(null);
+  setTouchEndX(null);
+};
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -102,7 +122,6 @@ export function Home() {
         resetForm();
         setStatus({ success: "Submitted successfully!" });
 
-        // ✅ Auto close popup on success
         setTimeout(() => setShowLeadPopup(false), 1200);
       } catch (e) {
         setStatus({ error: e.message || "Something went wrong" });
@@ -114,7 +133,6 @@ export function Home() {
 
   const errorClass = "mt-1 text-[11px] text-red-500";
 
-  // ✅ Popup after reload 3s (show only once per session)
   useEffect(() => {
 
     const t = setTimeout(() => {
@@ -125,7 +143,6 @@ export function Home() {
     return () => clearTimeout(t);
   }, []);
 
-  // ✅ ESC close popup
   useEffect(() => {
     const onKeyDown = (e) => {
       if (e.key === "Escape") setShowLeadPopup(false);
@@ -146,6 +163,7 @@ export function Home() {
       tagLine: "Flash Sale 25% Off",
       subTagLine: "Today's Top Pick!",
       image: "/images/bedroom.webp",
+      negotiableText: "Onwards*",
     },
     {
       id: 2,
@@ -159,11 +177,22 @@ export function Home() {
       subTagLine: "Limited Inventory",
       image:
         "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=1800&auto=format&fit=crop",
+      negotiableText: "Price negotiable",
     },
   ];
 
   const [activeIndex, setActiveIndex] = useState(0);
   const active = featuredSlides[activeIndex];
+
+// Auto-slide every 3 seconds
+useEffect(() => {
+  const interval = setInterval(() => {
+    nextSlide();
+  }, 3000);
+  
+  return () => clearInterval(interval);
+}, [activeIndex]); // Re-run when index changes
+
 
   const prevSlide = () =>
     setActiveIndex((prev) =>
@@ -304,7 +333,7 @@ export function Home() {
                       whileTap={{ scale: 0.98 }}
                       type="submit"
                       disabled={formik.isSubmitting}
-                      className="rounded-full bg-[#0F3F3B] w-[175px] h-[46px] text-[16px] font-semibold uppercase tracking-[0.16em] text-[#FFEFC4] hover:bg-[#0a2926] disabled:opacity-60"
+                      className="rounded-full bg-[#0F3F3B] sm:w-[175px] sm:h-[46px] w-[150px] h-[40px] sm:text-[16px] text-[14px] font-semibold uppercase tracking-[0.16em] text-[#FFEFC4] hover:bg-[#0a2926] disabled:opacity-60"
                     >
                       {formik.isSubmitting ? "Submitting..." : "SUBMIT NOW"}
                     </motion.button>
@@ -337,7 +366,7 @@ export function Home() {
             {/* LEFT PANEL */}
             <div className="relative bg-[#0F3F3B] px-6 py-12 sm:px-10 lg:px-16 lg:py-6">
               {/* Logo + Mobile Menu Icon (mobile only) */}
-              <div className="sm:mt-[20px] flex items-center justify-between gap-3">
+              <div className="sm:mt-[20px] flex items-center justify-between gap-6">
                 <img
                   src="/images/logo_1.svg"
                   alt="SLV Logo"
@@ -428,14 +457,16 @@ export function Home() {
                 </motion.p>
 
                 <motion.div variants={fadeUp} className="mt-10">
-                  <motion.a
+                  <motion.button
+                    type="button"
                     whileHover={{ y: -2 }}
                     whileTap={{ scale: 0.98 }}
-                    href="#contact"
+                    onClick={() => setShowLeadPopup(true)}
                     className="inline-flex rounded-full bg-[#E0B24A] px-8 py-3 text-sm font-semibold text-[#0F3F3B]"
                   >
                     GET BROCHURE
-                  </motion.a>
+                  </motion.button>
+
                 </motion.div>
               </motion.div>
             </div>
@@ -678,58 +709,69 @@ export function Home() {
 
       {/* CAROUSEL */}
       <motion.div
-        className="mx-auto mt-4 w-full max-w-[1280px] overflow-hidden rounded-[28px] shadow-sm"
-        variants={fadeUp}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, amount: 0.2 }}
+  className="mx-auto mt-4 w-full max-w-[1280px] overflow-hidden rounded-[28px] shadow-sm"
+  variants={fadeUp}
+  initial="hidden"
+  whileInView="show"
+  viewport={{ once: true, amount: 0.2 }}
+>
+  <div className="relative w-full">
+    {/* SLIDING CONTAINER - Images + Desktop Overlay */}
+    <motion.div
+      key={activeIndex} // Key triggers re-mount for smooth slide
+      initial={{ x: 100 }} // Slide in from right
+      animate={{ x: 0 }}
+      exit={{ x: -100 }} // Slide out to left
+      transition={{ duration: 0.5, ease: "easeInOut" }}
+      className="relative"
+    >
+      {/* IMAGE AREA */}
+      <div 
+        className="relative h-[320px] sm:h-[460px] lg:h-[600px] overflow-hidden touch-pan-x"
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
       >
-        <div className="relative w-full">
-          {/* IMAGE AREA */}
-          <div className="relative h-[320px] sm:h-[460px] lg:h-[600px] overflow-hidden">
-            <img
-              src={active.image}
-              alt={active.title}
-              className="h-full w-full object-cover"
-            />
+        <img
+          src={active.image}
+          alt={active.title}
+          className="h-full w-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/30" />
+        
+        {/* Right flash text */}
+        <div className="absolute bottom-12 right-10 text-right text-white drop-shadow hidden sm:block">
+          <p className="text-2xl font-medium">{active.tagLine}</p>
+          <p className="mt-1 text-base">{active.subTagLine}</p>
+        </div>
 
-            <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/30" />
+        {/* Dots */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-3 sm:bottom-4 flex justify-center">
+          <div className="pointer-events-auto flex gap-2 rounded-full bg-black/20 px-3 py-1">
+            {featuredSlides.map((slide, idx) => (
+              <button
+                key={slide.id}
+                onClick={() => setActiveIndex(idx)}
+                className={`h-2 w-2 rounded-full transition-all ${
+                  idx === activeIndex ? "w-5 bg-white" : "bg-white/50 hover:bg-white/80"
+                }`}
+              />
+            ))}
+          </div>
+        </div>
 
-            {/* Right flash text */}
-            <div className="absolute bottom-12 right-10 text-right text-white drop-shadow hidden sm:block">
-              <p className="text-2xl font-medium">{active.tagLine}</p>
-              <p className="mt-1 text-base">{active.subTagLine}</p>
-            </div>
-
-            {/* Dots */}
-            <div className="pointer-events-none absolute inset-x-0 bottom-3 sm:bottom-4 flex justify-center">
-              <div className="pointer-events-auto flex gap-2 rounded-full bg-black/20 px-3 py-1">
-                {featuredSlides.map((slide, idx) => (
-                  <button
-                    key={slide.id}
-                    onClick={() => setActiveIndex(idx)}
-                    className={`h-2 w-2 rounded-full transition-all ${
-                      idx === activeIndex
-                        ? "w-5 bg-white"
-                        : "bg-white/50 hover:bg-white/80"
-                    }`}
-                  />
-                ))}
-              </div>
-            </div>
-
-            {/* OVERLAY CARD ONLY FOR sm+ */}
-            <div className="hidden sm:block absolute left-10 bottom-10 z-20">
-              <motion.div
-                key={active.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35, ease: "easeOut" }}
-                className="bg-white/95 backdrop-blur rounded-2xl shadow-lg p-2 w-[413px] h-[258px]"
-              >
-                <h3 className="text-[20px] font-semibold tracking-wide text-[#0F3F3B] my-3 mx-[30px]">
-                  {active.title}
-                </h3>
+        {/* DESKTOP OVERLAY CARD - Now slides with image */}
+        <div className="hidden sm:block absolute left-10 bottom-10 z-20">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+            className="bg-white/95 backdrop-blur rounded-2xl shadow-lg p-2 w-[413px] h-[258px]"
+          >
+            {/* Your existing overlay card content */}
+            <h3 className="text-[20px] font-semibold tracking-wide text-[#0F3F3B] my-3 mx-[30px]">
+              {active.title}
+            </h3>
 
                 <div className="my-5 mx-[10px] flex flex-wrap gap-2 text-[14px] text-slate-600">
                   <span className="rounded-full border border-[#777777] flex justify-center items-center gap-2 px-2.5 py-1">
@@ -759,9 +801,9 @@ export function Home() {
                       {active.price}
                     </span>
                     &nbsp;&nbsp;
-                    <span className="text-dark">Negotiable Price</span>
+                    <span className="text-dark">{active.negotiableText}</span>
                   </div>
-
+                  
                   <div className="flex gap-2">
                     <motion.button
                       whileHover={{ y: -1 }}
@@ -784,7 +826,7 @@ export function Home() {
               </motion.div>
             </div>
           </div>
-
+        </motion.div>
           {/* MOBILE CARD BELOW IMAGE */}
           <div className="sm:hidden relative z-10 px-3 pb-4 pt-2 bg-white">
             <motion.div
@@ -970,7 +1012,7 @@ export function Home() {
                     className="h-full w-full object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
-                  <div className="absolute bottom-4 left-5 right-5 flex items-center justify-between text-white">
+                  <div className="absolute bottom-4 left-5 bg-black/30 px-3 py-1 rounded-full right-5 flex items-center justify-between text-white">
                     <span className="text-sm font-medium">{c.title}</span>
                     <span className="text-xs">{c.dist}</span>
                   </div>
@@ -1033,18 +1075,18 @@ export function Home() {
                       <PhoneIcon />
                     </span>
                   </div>
-                  <span className="text-[18px] sm:text-[18px] font-semibold text-[#0F3F3B]">
+                  <span className="text-[13px] sm:text-[18px] font-semibold text-[#0F3F3B]">
                     +91 9538752960
                   </span>
                 </div>
 
                 <div className="flex items-center gap-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-md bg-[#FFEFC4] text-[#0F3F3B]">
+                  <div className="flex h-10 w-10 px-2 items-center justify-center rounded-md bg-[#FFEFC4] text-[#0F3F3B]">
                     <span className="text-lg">
                       <MailIcon />
                     </span>
                   </div>
-                  <span className="text-[16px] sm:text-[18px] font-semibold text-[#0F3F3B] break-all">
+                  <span className="text-[13px] sm:text-[18px] font-semibold text-[#0F3F3B] break-all">
                     contact@rathnabhoomidevelopers.com
                   </span>
                 </div>
@@ -1132,7 +1174,7 @@ export function Home() {
                     whileTap={{ scale: 0.98 }}
                     type="submit"
                     disabled={formik.isSubmitting}
-                    className="rounded-full bg-[#0F3F3B] w-[175px] h-[46px] text-[16px] font-semibold uppercase tracking-[0.16em] text-[#FFEFC4] hover:bg-[#0a2926] disabled:opacity-60"
+                    className="rounded-full bg-[#0F3F3B] w-[150px] h-[40px] text-[14px] font-semibold uppercase tracking-[0.16em] text-[#FFEFC4] hover:bg-[#0a2926] disabled:opacity-60"
                   >
                     {formik.isSubmitting ? "Submitting..." : "SUBMIT NOW"}
                   </motion.button>
@@ -1167,7 +1209,7 @@ export function Home() {
             <img
               src="/images/logo_1.svg"
               alt="Rathna Bhoomi Developers"
-              className="h-[56px] sm:h-[64px] w-auto sm:w-[354px]"
+              className="h-[56px] sm:h-[64px] w-[220px] sm:w-[354px]"
             />
           </div>
 
@@ -1186,7 +1228,7 @@ export function Home() {
                 <p className="text-[16px] text-white/90">Phone</p>
                 <a
                   href="tel:+919538752960"
-                  className="text-[18px] font-semibold text-white hover:underline"
+                  className="sm:text-[18px] text-[13px]  font-semibold text-white hover:underline"
                 >
                   +91 9538752960
                 </a>
@@ -1194,14 +1236,14 @@ export function Home() {
             </div>
 
             <div className="flex items-center gap-4">
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#F7F0DD] text-[#1F4B48]">
+              <div className="flex h-11 px-2 w-11 items-center justify-center rounded-xl bg-[#F7F0DD] text-[#1F4B48]">
                 <MailIcon />
               </div>
               <div>
                 <p className="text-[16px] text-white/90">Email</p>
                 <a
                   href="mailto:contact@rathnabhoomidevelopers.com"
-                  className="text-[18px] font-semibold text-white hover:underline break-all"
+                  className="sm:text-[18px] text-[13px] font-semibold text-white hover:underline break-all"
                 >
                   contact@rathnabhoomidevelopers.com
                 </a>
@@ -1209,12 +1251,12 @@ export function Home() {
             </div>
 
             <div className="flex items-center gap-4">
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#F7F0DD] text-[#1F4B48]">
+              <div className="flex h-11 px-2 w-11 items-center justify-center rounded-xl bg-[#F7F0DD] text-[#1F4B48]">
                 <ClockIcon />
               </div>
               <div>
                 <p className="text-[16px] text-white/90">Opening Hours</p>
-                <p className="text-[18px] font-semibold text-white">
+                <p className="sm:text-[18px] text-[13px] font-semibold text-white">
                   Mon to Sun 09:30 am - 06:30 pm
                 </p>
               </div>
