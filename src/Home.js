@@ -775,7 +775,7 @@ useEffect(() => {
 
                 <div className="my-5 mx-[10px] flex flex-wrap gap-2 text-[14px] text-slate-600">
                   <span className="rounded-full border border-[#777777] flex justify-center items-center gap-2 px-2.5 py-1">
-                    <img src="/images/bedicon.svg`" alt="" />
+                    <img src="/images/bedicon.svg" alt="" />
                     {active.beds}
                   </span>
                   <span className="rounded-full border border-[#777777] flex justify-center items-center gap-2 px-2.5 py-1">
@@ -1221,14 +1221,14 @@ useEffect(() => {
 
           <div className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-3">
             <div className="flex items-center gap-4">
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#F7F0DD] text-[#1F4B48]">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#F7F0DD] text-[#1F4B48]">
                 <PhoneIcon />
               </div>
               <div>
                 <p className="text-[16px] text-white/90">Phone</p>
                 <a
                   href="tel:+919538752960"
-                  className="sm:text-[18px] text-[13px]  font-semibold text-white hover:underline"
+                  className="sm:text-[16px] text-[14px]  font-semibold text-white hover:underline"
                 >
                   +91 9538752960
                 </a>
@@ -1236,14 +1236,14 @@ useEffect(() => {
             </div>
 
             <div className="flex items-center gap-4">
-              <div className="flex h-11 px-2 w-11 items-center justify-center rounded-xl bg-[#F7F0DD] text-[#1F4B48]">
+              <div className="flex h-9 px-2 w-9 items-center justify-center rounded-xl bg-[#F7F0DD] text-[#1F4B48]">
                 <MailIcon />
               </div>
               <div>
                 <p className="text-[16px] text-white/90">Email</p>
                 <a
                   href="mailto:contact@rathnabhoomidevelopers.com"
-                  className="sm:text-[18px] text-[13px] font-semibold text-white hover:underline break-all"
+                  className="sm:text-[15px] text-[14px] font-semibold text-white hover:underline break-all"
                 >
                   contact@rathnabhoomidevelopers.com
                 </a>
@@ -1251,12 +1251,12 @@ useEffect(() => {
             </div>
 
             <div className="flex items-center gap-4">
-              <div className="flex h-11 px-2 w-11 items-center justify-center rounded-xl bg-[#F7F0DD] text-[#1F4B48]">
+              <div className="flex h-9 px-2 w-9 items-center justify-center rounded-xl bg-[#F7F0DD] text-[#1F4B48]">
                 <ClockIcon />
               </div>
               <div>
                 <p className="text-[16px] text-white/90">Opening Hours</p>
-                <p className="sm:text-[18px] text-[13px] font-semibold text-white">
+                <p className="sm:text-[16px] text-[14px] font-semibold text-white">
                   Mon to Sun 09:30 am - 06:30 pm
                 </p>
               </div>
