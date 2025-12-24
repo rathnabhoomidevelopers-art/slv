@@ -6,11 +6,12 @@ import {
   PhoneIcon,
   Menu,
   X,
+  MessageCircleIcon,
 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-
+import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
 const API_BASE =
@@ -53,6 +54,7 @@ export function Home() {
   const [showLeadPopup, setShowLeadPopup] = useState(false);
   const [touchStartX, setTouchStartX] = useState(null);
   const [touchEndX, setTouchEndX] = useState(null);
+  const navigate = useNavigate();
 
   const handleTouchStart = (e) => {
   setTouchStartX(e.touches[0].clientX);
@@ -103,14 +105,16 @@ const handleTouchEnd = () => {
           );
         }
 
+        const payload = {
+          name: values.name,
+          phone: values.phone,
+          message: values.message,
+        };
+
         const res = await fetch(`${API_BASE}/add-leads`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            name: values.name,
-            phone: values.phone,
-            message: values.message,
-          }),
+          body: JSON.stringify(payload),
         });
 
         if (!res.ok) {
@@ -119,16 +123,20 @@ const handleTouchEnd = () => {
         }
 
         await res.json();
-        resetForm();
-        setStatus({ success: "Submitted successfully!" });
 
-        setTimeout(() => setShowLeadPopup(false), 1200);
+        // ✅ Navigate to thank-you page
+        navigate("/thank-you", { state: { name: payload.name, phone: payload.phone } });
+
+        // Optional cleanup (won't matter after navigation)
+        resetForm();
+        setShowLeadPopup(false);
       } catch (e) {
         setStatus({ error: e.message || "Something went wrong" });
       } finally {
         setSubmitting(false);
       }
     },
+
   });
 
   const errorClass = "mt-1 text-[11px] text-red-500";
@@ -157,7 +165,7 @@ const handleTouchEnd = () => {
       title: "3 BHK APARTMENT",
       beds: "3-Bed",
       baths: "2-Bath",
-      area: "1600 SQFT",
+      area: "1350-1600 SQFT",
       description: "3-bedroom, 2-bathroom homes with privacy and natural light.",
       price: "1.60 Cr",
       tagLine: "Flash Sale 25% Off",
@@ -1219,7 +1227,7 @@ useEffect(() => {
             Sahakar Nagar, Bengaluru, Karnataka 560092
           </p>
 
-          <div className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-3">
+          <div className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-3 lg:gap-4">
             <div className="flex items-center gap-4">
               <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#F7F0DD] text-[#1F4B48]">
                 <PhoneIcon />
@@ -1263,7 +1271,104 @@ useEffect(() => {
             </div>
           </div>
         </div>
+        
       </motion.section>
+      <motion.div
+        initial={{ opacity: 0, y: 12, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ type: "spring", stiffness: 120, damping: 18, mass: 0.9 }}
+        className="fixed bottom-5 right-4 z-[9999] flex flex-col items-end gap-4 font-poppins"
+      >
+        <a
+          href="https://wa.me/919538752960"
+          target="_blank"
+          rel="noopener noreferrer"
+          className=" whatsapp-chat
+            sm:hidden
+            w-12 h-12
+            rounded-xl
+            bg-[#25D366]
+            flex items-center justify-center
+            shadow-[0_12px_30px_rgba(0,0,0,0.25)]
+          "
+        >
+          <MessageCircleIcon className="w-6 h-6 text-white" />
+        </a>
+
+        <a
+          href="https://wa.me/99538752960"
+          target="_blank"
+          rel="noopener noreferrer"
+          className=" whatsapp-chat-gtm
+            hidden sm:inline-flex
+            group no-underline relative items-center
+            bg-white
+            pl-3 pr-[70px] py-4
+            rounded-xl
+            shadow-[0_12px_35px_rgba(0,0,0,0.18)]
+            hover:scale-[1.02] transition-transform
+          "
+        >
+          <span className="text-slate-800 group-hover:text-green-600 font-semibold text-base whitespace-nowrap transition-colors">
+            WhatsApp
+          </span>
+
+          <span
+            className="
+              absolute right-3 top-1/2 -translate-y-1/2
+              w-11 h-11 rounded-xl
+              bg-[#25D366]
+              flex items-center justify-center
+              shadow-[0_6px_16px_rgba(0,0,0,0.12)]
+            "
+          >
+            <MessageCircleIcon className="w-5 h-5 text-white" />
+          </span>
+        </a>
+
+        <a
+          href="tel:+919538752960"
+          className=" tel-chat
+            sm:hidden
+            w-12 h-12
+            rounded-xl 
+            bg-[#3B46F6]
+            flex items-center justify-center
+            shadow-[0_12px_30px_rgba(0,0,0,0.25)]
+          "
+        >
+          <PhoneIcon className="w-6 h-6 text-white" />
+        </a>
+
+        <a
+          href="tel:+919538752960"
+          className=" tel-chat-gtm
+            hidden sm:inline-flex
+            group no-underline relative items-center
+            bg-white
+            pl-3 pr-[66px] py-4
+            rounded-xl
+            shadow-[0_12px_35px_rgba(0,0,0,0.18)]
+            hover:scale-[1.02] transition-transform
+          "
+        >
+          <span className="text-slate-800 group-hover:text-[#3B46F6] font-semibold text-base whitespace-nowrap transition-colors">
+            +91 9538752960
+          </span>
+
+          <span
+            className="
+              absolute right-3 top-1/2 -translate-y-1/2
+              w-11 h-11 rounded-xl
+              bg-[#3B46F6]
+              flex items-center justify-center
+              shadow-[0_6px_16px_rgba(0,0,0,0.12)]
+            "
+          >
+            <PhoneIcon className="w-5 h-5 text-white" />
+          </span>
+        </a>
+      </motion.div>
     </>
   );
 }
