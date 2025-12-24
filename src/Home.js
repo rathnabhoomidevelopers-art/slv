@@ -1243,7 +1243,7 @@ useEffect(() => {
                 <p className="text-[16px] text-white/90">Email</p>
                 <a
                   href="mailto:contact@rathnabhoomidevelopers.com"
-                  className="sm:text-[15px] text-[14px] font-semibold text-white hover:underline break-all"
+                  className="sm:text-[16px] text-[14px] font-semibold text-white hover:underline break-all"
                 >
                   contact@rathnabhoomidevelopers.com
                 </a>
