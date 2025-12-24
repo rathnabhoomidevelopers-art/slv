@@ -775,7 +775,7 @@ useEffect(() => {
 
                 <div className="my-5 mx-[10px] flex flex-wrap gap-2 text-[14px] text-slate-600">
                   <span className="rounded-full border border-[#777777] flex justify-center items-center gap-2 px-2.5 py-1">
-                    <img src="/images/bedicon.svg" alt="" />
+                    <img src="/images/bedicon.svg`" alt="" />
                     {active.beds}
                   </span>
                   <span className="rounded-full border border-[#777777] flex justify-center items-center gap-2 px-2.5 py-1">
