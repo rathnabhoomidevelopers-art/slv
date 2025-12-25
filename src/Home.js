@@ -54,6 +54,8 @@ export function Home() {
   const [showLeadPopup, setShowLeadPopup] = useState(false);
   const [touchStartX, setTouchStartX] = useState(null);
   const [touchEndX, setTouchEndX] = useState(null);
+  const [open, setOpen] = useState(false);
+
   const navigate = useNavigate();
 
   const handleTouchStart = (e) => {
@@ -556,117 +558,12 @@ useEffect(() => {
               <motion.button
                 whileHover={{ y: -2 }}
                 whileTap={{ scale: 0.98 }}
-                onClick={() => setOpen(true)}
+                onClick={() => setShowLeadPopup(true)} 
                 className="mt-8 rounded-full bg-[#0F3F3B] px-6 py-3 text-[18px] font-semibold text-[#FFF]"
               >
                 SCHEDULE A VISIT
               </motion.button>
-              <AnimatePresence>
-  {open && (
-    <>
-      {/* Overlay */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        onClick={() => setOpen(false)}
-        className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
-      />
-
-      {/* Modal */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9, y: 40 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.9, y: 40 }}
-        transition={{ duration: 0.3, ease: "easeOut" }}
-        className="fixed inset-0 z-50 flex items-center justify-center px-4"
-      >
-        <div className="relative w-full max-w-lg rounded-2xl bg-white shadow-xl">
-          
-          {/* Close button */}
-          <button
-            onClick={() => setOpen(false)}
-            className="absolute right-4 top-4 text-2xl text-gray-500 hover:text-black"
-          >
-            ×
-          </button>
-
-          {/* Your existing form */}
-          <div className="px-6 sm:px-[64px] py-8">
-            <form onSubmit={formik.handleSubmit} className="space-y-5">
-
-              {/* NAME */}
-              <div>
-                <label className="block text-[14px] font-semibold uppercase tracking-[0.12em] text-[#5b5a5a]">
-                  NAME*
-                </label>
-                <input
-                  name="name"
-                  className="mt-2 w-full rounded-md border border-[#F3E2B7] px-3 py-2"
-                  value={formik.values.name}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                />
-                {formik.touched.name && formik.errors.name && (
-                  <p className={errorClass}>{formik.errors.name}</p>
-                )}
-              </div>
-
-              {/* PHONE */}
-              <div>
-                <label className="block text-[14px] font-semibold uppercase tracking-[0.12em] text-[#5b5a5a]">
-                  PHONE*
-                </label>
-                <input
-                  name="phone"
-                  className="mt-2 w-full rounded-md border border-[#F3E2B7] px-3 py-2"
-                  value={formik.values.phone}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                />
-                {formik.touched.phone && formik.errors.phone && (
-                  <p className={errorClass}>{formik.errors.phone}</p>
-                )}
-              </div>
-
-              {/* MESSAGE */}
-              <div>
-                <label className="block text-[14px] font-semibold uppercase tracking-[0.12em] text-[#5b5a5a]">
-                  MESSAGE*
-                </label>
-                <textarea
-                  name="message"
-                  rows={3}
-                  className="mt-2 w-full rounded-md border border-[#F3E2B7] px-3 py-2 resize-none"
-                  value={formik.values.message}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                />
-                {formik.touched.message && formik.errors.message && (
-                  <p className={errorClass}>{formik.errors.message}</p>
-                )}
-              </div>
-
-              {/* SUBMIT */}
-              <motion.button
-                whileHover={{ y: -2 }}
-                whileTap={{ scale: 0.98 }}
-                type="submit"
-                className="rounded-full bg-[#0F3F3B] w-full h-[46px] text-[16px] font-semibold uppercase tracking-[0.16em] text-[#FFEFC4]"
-              >
-                SUBMIT NOW
-              </motion.button>
-
-            </form>
-          </div>
-        </div>
-      </motion.div>
-    </>
-  )}
-</AnimatePresence>
-
             </div>
-
             <motion.div
               variants={stagger}
               initial="hidden"
