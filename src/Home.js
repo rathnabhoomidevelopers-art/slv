@@ -1080,17 +1080,6 @@ useEffect(() => {
 
               <motion.div variants={fadeUp} className="mt-8 space-y-4">
                 <div className="flex items-center gap-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-md bg-[#FFEFC4] text-[#0F3F3B]">
-                    <span className="text-lg">
-                      <PhoneIcon />
-                    </span>
-                  </div>
-                  <span className="text-[13px] sm:text-[18px] font-semibold text-[#0F3F3B]">
-                    +91 9538752960
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-4">
                   <div className="flex h-10 w-10 px-2 items-center justify-center rounded-md bg-[#FFEFC4] text-[#0F3F3B]">
                     <span className="text-lg">
                       <MailIcon />

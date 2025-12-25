@@ -230,7 +230,6 @@ export default function ThankYou() {
         >
           <MessageCircleIcon className="w-6 h-6 text-white" />
         </a>
-
         <a
           href="https://wa.me/919538752960"
           target="_blank"
