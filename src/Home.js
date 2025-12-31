@@ -74,9 +74,9 @@ const handleTouchEnd = () => {
   
   if (Math.abs(diff) > minSwipeDistance) {
     if (diff > 0) {
-      nextSlide(); // Swipe left -> next slide
+      nextSlide();
     } else {
-      prevSlide(); // Swipe right -> prev slide
+      prevSlide();
     }
   }
   
@@ -126,7 +126,7 @@ const handleTouchEnd = () => {
 
         await res.json();
 
-        // ✅ Navigate to thank-you page
+        // Navigate to thank-you page
         navigate("/thank-you", { state: { name: payload.name, phone: payload.phone } });
 
         // Optional cleanup (won't matter after navigation)
