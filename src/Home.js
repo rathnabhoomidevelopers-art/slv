@@ -224,7 +224,7 @@ useEffect(() => {
           <meta
             name="description"
             content="Discover premium 3 & 4 BHK flats in Bangalore offering spacious layouts, modern amenities, and excellent connectivity. Book your site visit today."
-          >Discover premium 3 & 4 BHK flats in Bangalore offering spacious layouts, modern amenities, and excellent connectivity. Book your site visit today.</meta>
+          />
           <meta
             name="keywords"
             content="3 & 4 BHK Flats in Bangalore"
@@ -480,7 +480,7 @@ useEffect(() => {
                   variants={fadeUp}
                   className="mt-6 max-w-md text-sm leading-7 sm:leading-8 text-white/70 sm:text-[18px]"
                 >
-                  RERA No : PRM/KA/RERA/1251/309/ PR/ 051024/007131
+                  RERA No : PRM/KA/RERA/1251/309/PR/051024/007131
                 </motion.p>
 
                 <motion.div variants={fadeUp} className="mt-10">
