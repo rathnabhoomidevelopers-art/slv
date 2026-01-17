@@ -165,27 +165,34 @@ const handleTouchEnd = () => {
   const featuredSlides = [
     {
       id: 1,
+      title: "2 BHK APARTMENT",
+      beds: "2-Bed",
+      baths: "2-Bath",
+      area: "1040-1170 SQFT",
+      description: "2-bedroom, 2-bathroom homes with privacy and natural light.",
+      price: "1.59 Cr",
+      image: "/images/bedroom_1.jpg",
+      negotiableText: "Onwards*",
+    },
+    {
+      id: 2,
       title: "3 BHK APARTMENT",
       beds: "3-Bed",
       baths: "2-Bath",
       area: "1350-1600 SQFT",
       description: "3-bedroom, 2-bathroom homes with privacy and natural light.",
-      price: "1.60 Cr",
-      tagLine: "Flash Sale 25% Off",
-      subTagLine: "Today's Top Pick!",
+      price: "2 Cr",
       image: "/images/bedroom.webp",
       negotiableText: "Onwards*",
     },
     {
-      id: 2,
+      id: 3,
       title: "4 BHK APARTMENT",
       beds: "4-Bed",
       baths: "3-Bath",
       area: "2000 SQFT",
       description: "4-bedroom, 3-bathroom homes with privacy and natural light.",
-      price: "2.36 Cr",
-      tagLine: "New Launch",
-      subTagLine: "Limited Inventory",
+      price: "2.60 Cr",
       image:
         "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=1800&auto=format&fit=crop",
       negotiableText: "Price negotiable",
@@ -478,9 +485,10 @@ useEffect(() => {
 
                 <motion.p
                   variants={fadeUp}
-                  className="mt-6 max-w-md text-sm leading-7 sm:leading-8 text-white/70 sm:text-[18px]"
+                  className="flex flex-row justify-center items-center gap-2 mt-6 w-[500px] text-sm leading-7 sm:leading-8 text-white/70 sm:text-[16px]"
                 >
-                  RERA No : PRM/KA/RERA/1251/309/PR/051024/007131
+                  <img src="/images/rera_approved.svg"/>
+                 RERA No : PRM/KA/RERA/1251/309/PR/051024/007131
                 </motion.p>
 
                 <motion.div variants={fadeUp} className="mt-10">
